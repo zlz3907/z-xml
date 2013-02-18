@@ -1,0 +1,11 @@
+<ivysettings>
+  <settings defaultResolver="co" />
+  <caches default="l-cache" resolutionCacheDir="${basedir}/ivy/cache">
+    <cache name="l-cache" basedir="${basedir}/ivy/cache" />
+  </caches>
+  <resolvers>
+    <chain name="co" returnFirst="false">
+      <ibiblio name="public" />
+    </chain>
+  </resolvers>
+</ivysettings>
