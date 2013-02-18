@@ -1,0 +1,14 @@
+no
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.cache
+
+# Folders #
+/lib
+/bin
+/dist
+/ivy/cache
