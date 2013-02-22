@@ -38,7 +38,7 @@ $ ant
 
 copy dist/z-xml/lib/z-xml-[version].jar to your lib folder and add z-xml-[version].jar to your classpath.
 
-<a name='a4' />
+<a name=e'a4' />
 ## API
 
 <a name='a5' />
