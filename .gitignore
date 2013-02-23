@@ -2,7 +2,6 @@ no
 *.class
 
 # Package Files #
-*.jar
 *.war
 *.ear
 *.cache
@@ -10,5 +9,4 @@ no
 # Folders #
 /lib
 /bin
-/dist
 /ivy/cache
