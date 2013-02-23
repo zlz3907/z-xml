@@ -34,7 +34,7 @@ public final class XMLTest {
     Object[] arr = {1, "2", 1, map};
     p.setArr(arr);
 
-    List<String> c = new ArrayList<String>();
+    List<String> c = new Arraylist<String>();
     c.add("&#1232;&amp;and;");
     c.add("xxx");
     p.setChildren(c);

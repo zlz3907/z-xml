@@ -37,10 +37,10 @@ $ ant
 
 Direct download：
 
-[click here](https://github.com/zlz3907/z-xml/blob/master/dist/z-xml/lib/z-xml-1.0.jar "Download z-xml!") to download or run:
+[click here](https://github.com/zlz3907/z-xml/raw/master/dist/z-xml/lib/z-xml-1.0.jar "Download z-xml!") to download or run:
 
 ```bash
-$ wget https://github.com/zlz3907/z-xml/blob/master/dist/z-xml/lib/z-xml-1.0.jar
+$ wget https://github.com/zlz3907/z-xml/raw/master/dist/z-xml/lib/z-xml-1.0.jar
 ```
 
 copy dist/z-xml/lib/z-xml-[version].jar to your lib folder and add z-xml-[version].jar to your classpath.
