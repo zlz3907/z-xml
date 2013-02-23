@@ -10,5 +10,5 @@ no
 # Folders #
 /lib
 /bin
-/dist
+#/dist
 /ivy/cache
