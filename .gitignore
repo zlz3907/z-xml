@@ -1,5 +1,7 @@
 no
 *.class
+.classpath
+.project
 
 # Package Files #
 *.war

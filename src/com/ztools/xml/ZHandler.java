@@ -21,22 +21,22 @@ import org.xml.sax.SAXException;
 
 public class ZHandler extends AbsHandler {
 
-  /**
-     * 
-     */
   private static final long serialVersionUID = 1L;
+
+  private boolean isDebug = false;
+
+  private int currLineNum = 0;
+
+  private StringBuilder characters = new StringBuilder();
 
   private String rootName;
 
   private List<Object> tempItemObject = new ArrayList<Object>();
   private String tempItemName;
   private Object currObject;
-  // private int oldDepth;
   private boolean isBaseType = false;
 
-  // private boolean isStartElement = true;
   private boolean isEndElement = false;
-  //  private IXMLProcess iXmlProcess = null;
 
   private Object bean;
 
@@ -61,28 +61,15 @@ public class ZHandler extends AbsHandler {
     this.charset = charset;
   }
 
-  // public String getPath() {
-  // return path;
-  // }
-  //
-  // public void setPath(String path) {
-  // this.path = path;
-  // }
-
   public ZHandler() {
     super();
   }
 
-  // public ZHandler(String filename) {
-  // this.path = filename;
-  // }
-
   @Override
   public void startDocument() throws SAXException {
-    // this.rootName = this.xmlBean.getRootName();
-    // System.out.println("startDocument...");
-    // //TODO
-    // iXmlProcess = XMLProcessFactory.getXmlProcess(rootName);
+    if (isDebug) {
+      System.out.println("Line: " + currLineNum++);
+    }
   }
 
   private Field[] getFields(Class<?> c) {
@@ -157,9 +144,11 @@ public class ZHandler extends AbsHandler {
   @Override
   public void startElement(String uri, String localName, String qName,
       Attributes attributes) throws SAXException {
+    if (isDebug)
+      System.out.println("Line: " + currLineNum++ + " " + qName + " " + depth
+          + " " + attributes.getValue("class"));
 
-    // System.out.println(qName + " " + depth + " " +
-    // attributes.getValue("class"));
+    characters.delete(0, characters.length());
 
     if (isRoot) {
       rootName = qName;
@@ -246,18 +235,26 @@ public class ZHandler extends AbsHandler {
 
   @Override
   public void characters(char[] ch, int start, int length) throws SAXException {
-    if (0 < length && isBaseType) {
-      String s = new String(ch).substring(start, start + length);
+    // processCharacters(ch, start, length);
+    characters.append(ch, start, length);
+  }
+
+  private void processCharacters(StringBuilder characters) {
+    if (0 < characters.length() && isBaseType) {
+      String s = characters.toString();// new String(ch).substring(start, start
+                                       // + length);
       currObject = parseValue(s, currObject.getClass());
       if (null != tempHashcode && !"".equals(tempHashcode)) {
         objMap.put(tempHashcode, currObject);
       }
       int tempItemIndex = depth - 1 - 1;
       tempItemObject.set(tempItemIndex, currObject);
+      // System.out.println("char: ------\n" + s);
     } else if (null != currObject && currObject instanceof Timestamp) {
       SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
       try {
-        String s = new String(ch).substring(start, start + length);
+        String s = characters.toString();// new String(ch).substring(start,
+                                         // start + length);
         currObject = new Timestamp(sdf.parse(s).getTime());
         int tempItemIndex = depth - 1 - 1;
         tempItemObject.set(tempItemIndex, currObject);
@@ -268,12 +265,15 @@ public class ZHandler extends AbsHandler {
       }
 
     }
+    if (isDebug)
+      System.out.println("Line: " + currLineNum++ + " character: ["
+          + characters.toString() + "]");
   }
 
   private Object parseValue(String value, Class<?> type) {
     Object p = null;
     try {
-      //      value = iXmlProcess.read(value);
+      // value = iXmlProcess.read(value);
       if (type.equals(String.class)) {
         p = null != value ? value : "";
       } else if (type.equals(Double.class)
@@ -324,6 +324,7 @@ public class ZHandler extends AbsHandler {
   public void endElement(String uri, String localName, String qName)
       throws SAXException {
     // System.out.println(qName + " " + depth-- + " depth " + oldDepth);
+    processCharacters(characters);
 
     if (rootName.equals(qName)) {
       return;
@@ -419,8 +420,9 @@ public class ZHandler extends AbsHandler {
       }
 
     }
-    // System.err.println(qName + " depth: " + depth + " obj: "
-    // + this.currKey);
+    if (isDebug)
+      System.err.println("Line: " + currLineNum++ + " " + qName + " depth: "
+          + depth + " obj: " + this.currValue);
     isEndElement = true;
     // isStartElement = false;
     // depth--;
@@ -442,6 +444,8 @@ public class ZHandler extends AbsHandler {
     if (null != obj) {
       this.setBean(obj);
     }
+    if (isDebug)
+      System.out.println(this.tempItemObject);
   }
 
   @Override

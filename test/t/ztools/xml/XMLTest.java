@@ -34,7 +34,7 @@ public final class XMLTest {
     Object[] arr = {1, "2", 1, map};
     p.setArr(arr);
 
-    List<String> c = new Arraylist<String>();
+    List<String> c = new ArrayList<String>();
     c.add("&#1232;&amp;and;");
     c.add("xxx");
     p.setChildren(c);
@@ -184,20 +184,25 @@ public final class XMLTest {
     map.put("keyone", "hello");
     map.put("keytwo", null);
     map.put(null, "three");
+    
+    Map<String, Object> tmap = new HashMap<String, Object>();
+    tmap.put("key1", "abcabcabc\nabc");
+    tmap.put("tsub", map);
 
     Map<String, Object> pMap = new HashMap<String, Object>();
-    pMap.put("subMap", map);
+    pMap.put("subMap", tmap);
     pMap.put("one", 1);
     pMap.put("integer", new Integer(129));
     pMap.put("string", "string");
 
+    
     Object testObj = pMap;
     String xmlStr = XMLWriter.objectToXmlString(testObj);
     //System.out.println(xmlStr);
     Object obj = XMLReader.xmlStringToObject(xmlStr);
     String xmlStr2 = XMLWriter.objectToXmlString(obj);
     //System.out.println();
-    //System.out.println(xmlStr2);
+    System.out.println(xmlStr2);
     System.out.println("testMapInMap is \t" + obj.equals(testObj));
     Assert.assertEquals(obj, testObj);
   }
@@ -214,4 +219,5 @@ public final class XMLTest {
     }
     
   }
+  
 }
