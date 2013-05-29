@@ -1,2 +1,0 @@
-ivy.settings.dir = ${basedir}/ivy/settings
-cache.dir = ${basedir}/ivy/cache
