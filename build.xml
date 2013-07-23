@@ -6,6 +6,11 @@
   </description>
 
   <property file="project.properties" />
+	
+	<condition property="resolve.shared.settings.file"
+	       value="${ivy.default.settings.dir}/ivysettings-shared.xml">
+	  <matches pattern="405" string="405" />
+	</condition>
 
   <import file="plugins/build.xml" as="phases" />
 

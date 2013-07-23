@@ -31,7 +31,7 @@ public class XMLWriter implements Serializable {
 
   private static final String CDATA_END = "]]>";
 
-  //private static IXMLProcess iXmlProcess = null;
+  // private static IXMLProcess iXmlProcess = null;
 
   // excluding the surrogate blocks
   // [#x1FFFE-#x1FFFF], [#x2FFFE-#x2FFFF], [#x3FFFE-#x3FFFF],
@@ -151,7 +151,7 @@ public class XMLWriter implements Serializable {
     sbd.append(" class=\"").append(bcs);
     sbd.append("\" >").append(END_LINE);
     // TODO classforname
-    //    iXmlProcess = XMLProcessFactory.getXmlProcess("XMLBean");
+    // iXmlProcess = XMLProcessFactory.getXmlProcess("XMLBean");
     // List<?> itemList = xmlBean.getItemList();
     Set<Object> objSet = new HashSet<Object>();
     // if (null != itemList && !itemList.isEmpty()) {
@@ -189,7 +189,7 @@ public class XMLWriter implements Serializable {
         sbd.append(" class=\"").append(bcs);
         sbd.append("\" >").append(END_LINE);
         // TODO classforname
-        //        iXmlProcess = XMLProcessFactory.getXmlProcess(xmlBean.getRootName());
+        // iXmlProcess = XMLProcessFactory.getXmlProcess(xmlBean.getRootName());
         List<?> itemList = xmlBean.getItemList();
         Set<Object> objSet = new HashSet<Object>();
         if (null != itemList && !itemList.isEmpty()) {
@@ -319,7 +319,7 @@ public class XMLWriter implements Serializable {
       name = name.substring(begin, end).toLowerCase() + name.substring(end);
     }
     String tmpValue = parseValue(obj);
-    if (null == tmpValue && !set.add(obj)) {
+    if (null == tmpValue && !set.add(obj) && !obj.getClass().isEnum()) {
       sbd.append("<").append(name);
       sbd.append(" hashcode=\"");
       sbd.append(obj.hashCode());
@@ -336,10 +336,9 @@ public class XMLWriter implements Serializable {
             "(\\u003c!\\u005bCDATA\\u005b|\\u005d\\u005d\\u003e)", " ");
         tmpValue = CDATA_PREF + toXmlString(tmpValue) + CDATA_END;
       }
-      sbd.append("<").append(name);
-      sbd.append(" class=\"");
+      sbd.append("<").append(name).append(" class=\"");
       sbd.append(obj.getClass().getName()).append("\">");
-      //      sbd.append(iXmlProcess.write(tmpValue)).append("</");
+      // sbd.append(iXmlProcess.write(tmpValue)).append("</");
       sbd.append(tmpValue).append("</");
       sbd.append(name).append(">");
       return;
@@ -380,6 +379,13 @@ public class XMLWriter implements Serializable {
       return;
     } else if (obj instanceof Class<?>) { // class object Prevent death
                                           // recursion
+    } else if (obj instanceof Enum) {
+      Enum<?> em = (Enum<?>) obj;
+      sbd.append("<").append(name).append(" class=\"");
+      sbd.append(obj.getClass().getName());
+      sbd.append("\" name=\"").append(em.name());
+      sbd.append("\" />");
+      return;
     } else if (Map.class.isInstance(obj)) {
       sbd.append("<").append(name).append(" hashcode=\"");
       sbd.append(obj.hashCode());
@@ -407,14 +413,17 @@ public class XMLWriter implements Serializable {
       Method[] ms = extractMethods(obj);
       if (null != ms) {
         for (int msIndex = 0; msIndex < ms.length; msIndex++) {
-          String filedName = ms[msIndex].getName();
-          if (!"getClass".equals(filedName)
-              && (filedName.startsWith("get") || filedName.startsWith("is"))) {
+          String fieldName = ms[msIndex].getName();
+          if (!"getClass".equals(fieldName) && !"get".equals(fieldName)
+              && !"is".equals(fieldName)
+              && 0 == ms[msIndex].getParameterTypes().length
+              && (fieldName.startsWith("get") || fieldName.startsWith("is"))) {
             try {
               Object valueObj = ms[msIndex].invoke(obj, new Object[] {});
-              objectToXmlString(valueObj, sbd, set, filedName);
+              objectToXmlString(valueObj, sbd, set, fieldName);
             } catch (Exception e) {
               e.printStackTrace();
+              System.out.println("error invoked " + fieldName);
             }
           }
         }
@@ -565,7 +574,7 @@ public class XMLWriter implements Serializable {
             sbd.append(" ").append(emp);
             // TODO value 修改 XMLBean
             if (!"class".equals(emp)) {
-              //              value = iXmlProcess.write(value);
+              // value = iXmlProcess.write(value);
             }
             // System.out.println(emp + " -> " + value);
             sbd.append("=\"").append(value).append("\"");

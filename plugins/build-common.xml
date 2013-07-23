@@ -1,6 +1,6 @@
 <project name="common-template" default="compile-test" basedir="."
-         xmlns:ivy="antlib:org.apache.ivy.ant" 
-         xmlns:cs="antlib:com.puppycrawl.tools.checkstyle">
+         xmlns:ivy="antlib:org.apache.ivy.ant">
+  <!-- xmlns:cs="antlib:com.puppycrawl.tools.checkstyle" -->
   <description>
     project description
   </description>
@@ -35,6 +35,22 @@
       location="${target.report.dir}/junit-html"/>
   -->
 
+  <import file="${js.rhinounit.build.xml}" optional="true" as="rhino" />
+
+  <taskdef name="jshint" classname="com.philmander.jshint.JsHintAntTask" 
+           classpath="${js.jshint.classpath}" />
+  <target name="run-jshint">
+    <!-- Lint the code -->
+    <mkdir dir="${js.jshint.report.dir}" />
+    <jshint dir="${basedir}" fail="false" 
+	    optionsFile="${js.jshint.options.json}">
+      <include name="${js.src.dir}/**/*.js" />
+      <include name="${js.test.dir}/**/*Test.js" />
+      <exclude name="**/*.min.js" />
+      <report type="xml" destFile="${js.jshint.report.xml.file}" />
+    </jshint>
+  </target>
+
   <condition property="cobertura.build.xml"
              value="Warning: No found cobertura home!">
     <not>
@@ -60,13 +76,20 @@
   </condition>
 
   <condition property="resolve.shared.settings.file"
-             value="ivysettings-shared.xml">
+	     value="ivysettings-shared.xml">
     <isreachable timeout="2"
-                 url="http://192.168.7.244:8080/job/Jcm-Project-Template/ws/plugins/ivy/settings/ivysettings-shared.xml" />
+	         url="${resolve.shared.url}" />
   </condition>
   <condition property="resolve.shared.settings.file"
-             value="${ivy.default.settings.dir}/ivysettings-shared.xml">
+	     value="${ivy.default.settings.dir}/ivysettings-shared.xml">
     <matches pattern="405" string="405" />
+  </condition>
+
+  <condition property="isPluginsOfReachable">
+    <and>
+      <istrue value="${plugins.auto.update}" />
+      <isreachable timeout="5" url="${plugins.checksum.url}" />
+    </and>
   </condition>
 
   <!-- paths used for compilation and run
@@ -147,19 +170,73 @@
        xmlns:cs="antlib:com.puppycrawl.tools.checkstyle"
        并且ant运行时的classpath中需要包含checkstyle-5.6-all.jar
   -->
+  <taskdef resource="checkstyletask.properties"
+           classpath="plugins/checkstyle/checkstyle-5.6-all.jar"/>
   <target name="checkstyle" 
           description="Generates a report of code convention violations.">
-    <cs:checkstyle config="/home/zhong/java/checkstyle-5.6/sun_checks.xml">
+    <mkdir dir="${checkstyle.report.dir}" />
+    <copy file="plugins/checkstyle/checkstyle-simple.xsl" 
+          tofile="${checkstyle.report.xsl.file}"/>
+    <checkstyle maxErrors="2000" config="plugins/checkstyle/sun_checks.xml"
+                classpath="plugins/checkstyle/">
       <fileset dir="${src.dir}" >
         <exclude name="org/**" />
         <exclude name="conf/**" />
       </fileset>
       <!-- Location of cache-file. Something that is project specific -->
       <!--property key="checkstyle.cache.file" file="target/cachefile"/-->
-      <!--formatter type="plain"/>
-          <formatter type="xml" toFile="${build.dir}/checkstyle_errors.xml"/-->
-    </cs:checkstyle>
+      <formatter type="plain"/>
+      <formatter type="xml"
+                 toFile="${checkstyle.report.xml.file}"/>
+    </checkstyle>
+    <style in="${checkstyle.report.xml.file}"
+           out="${checkstyle.report.html.file}"
+           style="${checkstyle.report.xsl.file}"/>
   </target>	
+
+  <target name="auto-update-plugins" if="isPluginsOfReachable">
+    <loadresource property="oldmd5">
+      <file file="plugins/jpt-plugins.MD5" />
+    </loadresource>
+    <loadresource property="newmd5">
+      <url url="${plugins.checksum.url}"/>
+    </loadresource>
+    <echo>plugins checksum is(old/new): ${oldmd5} - ${newmd5}</echo>
+    <condition property="isAutoUpdatePlugins">
+      <not>
+        <equals arg1="${oldmd5}" arg2="${newmd5}" trim="true" />
+      </not>
+    </condition>
+    <echo>isAutoUpdatePlugins: ${isAutoUpdatePlugins}</echo>
+    <antcall target="_aup" />
+  </target>
+  <target name="_aup" if="isAutoUpdatePlugins">
+    <!-- 在这里实现下载新的plugins并替换现有plugins的脚本调用 
+         1. 创建临时文件夹，用来存放更新过程中的临时文件
+         2. 下载新版本的插件
+         3. 解压文件（untar），验证下载文件的校验码是否正确
+         4. 备份原有插件，替换插件文件夹
+         5. 删除临时文件夹
+         6. 直接退出，提示插件已更新，需要重新运行Ant（考虑是否更新前也加提示）
+    -->
+    <echo level="info" encoding="utf-8">
+      注意：您当前使用的“项目自动构建模板插件”已有新的版本，请手动下载更新
+      或在project.properties里添加配置项“plugins.auto.update=ture”将更新模
+      式设置为自动模式。
+
+      当前版本签章号：${oldmd5}
+      最新版本签章号：${newmd5}
+      下载地址：${plugins.download.url}
+    </echo>
+
+    <!--property name="updatetmp" value=".tmp-update" />
+        <mkdir dir="${updatetmp}" />
+        <get src="${plugins.checksum.url}"
+        dest="${updatetmp}/jpt-plugins.tar.gz" />
+        <gunzip src="${updatetmp}/jpt-plugins.tar.gz" />
+        <untar src="${updatetmp}/jpt-plugins.tar" dest="${updatetmp}" />
+        <delete dir="${updatetmp}" /-->
+  </target>
 
   <!-- project target -->
   <target name="init">
@@ -176,18 +253,26 @@
     <mkdir dir="${test.unit.dir}" />
     <mkdir dir="${test.verify.dir}" />
     <mkdir dir="${test.integration.dir}" />
-	<mkdir dir="${publish.dir}" />
+    <mkdir dir="${publish.dir}" />
     <copy includeemptydirs="false" todir="${build.src.dir}">
       <fileset dir="${src.core}">
         <exclude name="**/*.java" />
       </fileset>
     </copy>
     <copy includeemptydirs="false" todir="${build.test.dir}">
-      <fileset dir="test">
+      <fileset dir="test/unit">
+        <exclude name="**/*.java"/>
+      </fileset>
+      <fileset dir="test/verify">
+        <exclude name="**/*.java"/>
+      </fileset>
+      <fileset dir="test/integration">
         <exclude name="**/*.java"/>
       </fileset>
     </copy>
 
+    <echo>Auto Update Plugins Option is: ${plugins.auto.update}</echo>
+    <echo>Is Update: ${isPluginsOfReachable}</echo>
     <echo>Import ${cobertura.build.xml}, isRunCoverage is ${isRunCoverage}</echo>
     
   </target>
@@ -311,14 +396,14 @@
       <param name="test.classpath" value="classpath" />
     </antcall>
   </target>
-	
-	<target name="junit-test" unless="isRunCoverage"
-		      description="test the project">
-	  <antcall target="_run-test">
-	  	<param name="test.fileset" value="${test.fileset}" />
-	  	<param name="test.classpath" value="${test.classpath}" />
-	  </antcall>
-	</target>
+  
+  <target name="junit-test" unless="isRunCoverage"
+	  description="test the project">
+    <antcall target="_run-test">
+      <param name="test.fileset" value="${test.fileset}" />
+      <param name="test.classpath" value="${test.classpath}" />
+    </antcall>
+  </target>
 
   <target name="_run-test">
     <mkdir dir="${junit.report.xml.dir}" />
@@ -372,7 +457,6 @@
     <delete file="${dist.dir}/${project.name}-${ivy.revision}.tar" />
     <delete file="${dist.dir}/${project.name}-${ivy.revision}.tar.gz" />
     <tar destfile="${dist.dir}/${project.name}-${ivy.revision}.tar">
-      
       <tarfileset dir="${basedir}" prefix="${project.name}-${ivy.revision}"
                   preserveLeadingSlashes="true">
         <include name="${src.core}/**" />

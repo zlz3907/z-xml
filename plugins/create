@@ -3,7 +3,12 @@ help='create <project_name> [-t <package_type>]'
 
 project_name='my_app'
 package_type='jar'
-
+download_filename='jpt-plugins'
+download_file_ext='tar.gz'
+download_prefix_v=''
+download_file_ver=''
+download_base_url='http://192.168.7.244:8080/job/Jcm-Project-Template/lastSuccessfulBuild/artifact/dist/'
+download_file=$download_filename$download_prefix_v$download_file_ver.$download_file_ext
 ## check input args
 parseArgs() {
     case $# in
@@ -21,20 +26,27 @@ parseArgs() {
 parseArgs $@
 
 ## download template
-wget http://192.168.7.244:8080/job/Jcm-Project-Template/ws/dist/Jcm-Project-Template-1.0.tar.gz
+wget $download_base_url$download_file
 
-if [ ! -f Jcm-Project-Template-1.0.tar.gz ]; then 
+if [ ! -f $download_file ]; then 
     echo 'Error: Download Failed!!!' 
     exit 0
 fi
 
-echo '$project_name.tar.gz is downloaded!'
-tar -vzxf Jcm-Project-Template-1.0.tar.gz
-rm -f Jcm-Project-Template-1.0.tar.gz
-mv Jcm-Project-Template-1.0 ${project_name}
+echo '$download_file is downloaded!'
+tar -vzxf $download_file
+rm -f $download_file
+mv $download_filename ${project_name}
+cp $project_name/plugins/example/* $project_name/ 
+mv $project_name/gitignore $project_name/.gitignore
 echo 'temp file is deleted!'
 sed -i "s/name=\"Jcm-Project-Template\"/name=\"${project_name}\"/" ${project_name}/build.xml
 sed -i "s/module=\"Jcm-Project-Template\"/module=\"${project_name}\"/" ${project_name}/ivy.xml
+sed -i "s/artifactId>Jcm-Project-Template/artifactId>${project_name}/" ${project_name}/pom.xml
+mkdir -p $project_name/src
+mkdir -p $project_name/test/unit
+mkdir -p $project_name/test/verify
+mkdir -p $project_name/test/integration
 echo 'initialized project configure!'
 echo ${project_name} is create!
 

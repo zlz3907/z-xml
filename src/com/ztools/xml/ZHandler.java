@@ -103,7 +103,11 @@ public class ZHandler extends AbsHandler {
         if (Timestamp.class.equals(c)) {
           return new Timestamp(System.currentTimeMillis());
         }
-
+        if (c.isEnum()) {
+//          System.out.println("FIXME: Enum " + c);
+          String name = attributes.getValue("name");
+          return Enum.valueOf(c.asSubclass(Enum.class), name);
+        }
         Object obj = c.newInstance();
         for (int i = 0; i < fs.length; i++) {
           String value = attributes.getValue(fs[i].getName());

@@ -220,4 +220,18 @@ public final class XMLTest {
     
   }
   
+  @Test
+  public void testRWExtendsObject() {
+    BBean bean = new BBean();
+    bean.setName("a");
+    bean.setaNumber(123);
+    
+    String str = XMLWriter.objectToXmlString(bean);
+    Object obj = XMLReader.xmlStringToObject(str);
+    Assert.assertEquals(bean, obj);
+    
+    bean.setName("b");
+    Assert.assertFalse(bean.equals(obj));
+  }
+  
 }
