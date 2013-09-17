@@ -104,7 +104,7 @@ public class ZHandler extends AbsHandler {
           return new Timestamp(System.currentTimeMillis());
         }
         if (c.isEnum()) {
-//          System.out.println("FIXME: Enum " + c);
+          // System.out.println("FIXME: Enum " + c);
           String name = attributes.getValue("name");
           return Enum.valueOf(c.asSubclass(Enum.class), name);
         }
@@ -118,7 +118,16 @@ public class ZHandler extends AbsHandler {
                 methodName = getMethodName(fs[i].getName().substring(2));
               }
             }
-            Method m = c.getMethod(methodName, fs[i].getType());
+            Method m = null;// c.getMethod(methodName, fs[i].getType());
+            // TODO:
+            do {
+              m = c.getMethod(methodName, fs[i].getType());
+              if (null != m) {
+                break;
+              }
+              c = c.getSuperclass();
+            } while (null != c);
+
             Object p = null;
             Class<?> type = fs[i].getType();
             p = parseValue(value, type);
@@ -382,7 +391,7 @@ public class ZHandler extends AbsHandler {
         } else {
           Method m = null;
           try {
-            Method[] ms = obj.getClass().getMethods();
+            Method[] ms = extractMethods(obj); // obj.getClass().getMethods();
             for (int i = 0; i < ms.length; i++) {
               if (ms[i].getName().toLowerCase()
                   .equals("set" + qName.toLowerCase())) {
@@ -457,4 +466,23 @@ public class ZHandler extends AbsHandler {
     return getBean();
   }
 
+  private static Method[] extractMethods(Object obj) {
+    Class<?> c = obj.getClass();
+    Method[] ms = null;// = obj.getClass().getDeclaredMethods();
+    Method[] temp;
+    do {
+      Method[] cms = c.getDeclaredMethods();
+      if (null == ms) {
+        ms = cms;
+      } else {
+        temp = new Method[ms.length + cms.length];
+        System.arraycopy(ms, 0, temp, 0, ms.length);
+        System.arraycopy(cms, 0, temp, ms.length, cms.length);
+        ms = temp;
+      }
+      c = c.getSuperclass();
+    } while (null != c);
+
+    return ms;
+  }
 }
