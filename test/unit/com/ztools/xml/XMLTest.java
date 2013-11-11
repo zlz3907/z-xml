@@ -3,21 +3,20 @@ package com.ztools.xml;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.Arrays;
-import java.lang.reflect.Array;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.ztools.xml.XMLReader;
-import com.ztools.xml.XMLWriter;
-import com.ztools.xml.ZHandler;
-
-import com.ztools.xml.bean.*;
+import com.ztools.xml.bean.BBean;
+import com.ztools.xml.bean.House;
+import com.ztools.xml.bean.Person;
+import com.ztools.xml.bean.Room;
 
 public final class XMLTest {
 
@@ -31,7 +30,7 @@ public final class XMLTest {
     subMap.put("sub2", "v2");
     map.put("bKey", subMap);
 
-    Object[] arr = {1, "2", 1, map};
+    Object[] arr = { 1, "2", 1, map };
     p.setArr(arr);
 
     List<String> c = new ArrayList<String>();
@@ -82,21 +81,20 @@ public final class XMLTest {
   public void testReadAndWriteXmlFile() {
     try {
       File file = new File("person.xml");
-      //      System.out.println("file: " + file.getAbsolutePath());
+      // System.out.println("file: " + file.getAbsolutePath());
       Object objA = creatTestObject();
       XMLWriter.writeObjectToXmlFile(objA, file.getAbsolutePath());
-      //      System.out.println("write file: " + file.getAbsolutePath());
-      Object objB = 
-        XMLReader.xmlStreamToObject(new FileInputStream(file), 
-                                    new ZHandler());
+      // System.out.println("write file: " + file.getAbsolutePath());
+      Object objB = XMLReader.xmlStreamToObject(new FileInputStream(file),
+          new ZHandler());
 
       String strA = XMLWriter.objectToXmlString(objA);
       String strB = XMLWriter.objectToXmlString(objB);
       System.out.println("testReadAndWriteXmlFile is \t"
-                         + strA.replaceAll(" hashcode=\"-?\\d+\"", "")
-                         .equals(strB.replaceAll(" hashcode=\"-?\\d+\"", "")));
-      assert(objA.equals(objB));
-      
+          + strA.replaceAll(" hashcode=\"-?\\d+\"", "").equals(
+              strB.replaceAll(" hashcode=\"-?\\d+\"", "")));
+      assert (objA.equals(objB));
+
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -116,17 +114,17 @@ public final class XMLTest {
     // System.out.println(xml2 + "\n-----------------");
     // System.out.println(xml2.replaceAll(" hashcode=\"-?\\d+\"", ""));
     Assert.assertEquals(xml1.replaceAll(" hashcode=\"-?\\d+\"", ""),
-                        xml2.replaceAll(" hashcode=\"-?\\d+\"", ""));
-    System.out.println("testObjectToXmlString is \t" 
-                       + xml1.replaceAll(" hashcode=\"-?\\d+\"", "")
-                       .equals(xml2.replaceAll(" hashcode=\"-?\\d+\"", "")));
+        xml2.replaceAll(" hashcode=\"-?\\d+\"", ""));
+    System.out.println("testObjectToXmlString is \t"
+        + xml1.replaceAll(" hashcode=\"-?\\d+\"", "").equals(
+            xml2.replaceAll(" hashcode=\"-?\\d+\"", "")));
   }
 
   @Test
   public void testNullValueInMap() {
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("keyone", "hello");
-    map.put("keytwo", new byte[]{1,2,3});
+    map.put("keytwo", new byte[] { 1, 2, 3 });
     map.put(null, "three");
     map.put("keyFour", null);
 
@@ -139,10 +137,10 @@ public final class XMLTest {
     boolean flag = true;
     if (obj instanceof Map<?, ?>) {
       Map<?, ?> m = (Map<?, ?>) obj;
-      
+
       for (Object key : map.keySet()) {
-        assert(m.containsKey(key));
-        assert(m.containsValue(map.get(key)));
+        assert (m.containsKey(key));
+        assert (m.containsValue(map.get(key)));
         if (!m.containsKey(key) || !m.containsValue(map.get(key))) {
           flag = false;
           Object v1 = map.get(key);
@@ -165,14 +163,14 @@ public final class XMLTest {
             }
           }
           if (!flag)
-          System.out.println("no match " + key + " a=" + m.get(key) 
-                             + " b=" + map.get(key));
+            System.out.println("no match " + key + " a=" + m.get(key) + " b="
+                + map.get(key));
           break;
         }
-        
+
       }
 
-      //      Assert.assertEquals(m., map);
+      // Assert.assertEquals(m., map);
     }
     System.out.println("testNullValueInMap is \t" + flag);
 
@@ -184,7 +182,7 @@ public final class XMLTest {
     map.put("keyone", "hello");
     map.put("keytwo", null);
     map.put(null, "three");
-    
+
     Map<String, Object> tmap = new HashMap<String, Object>();
     tmap.put("key1", "abcabcabc\nabc");
     tmap.put("tsub", map);
@@ -195,43 +193,51 @@ public final class XMLTest {
     pMap.put("integer", new Integer(129));
     pMap.put("string", "string");
 
-    
     Object testObj = pMap;
     String xmlStr = XMLWriter.objectToXmlString(testObj);
-    //System.out.println(xmlStr);
+    // System.out.println(xmlStr);
     Object obj = XMLReader.xmlStringToObject(xmlStr);
     String xmlStr2 = XMLWriter.objectToXmlString(obj);
-    //System.out.println();
+    // System.out.println();
     System.out.println(xmlStr2);
     System.out.println("testMapInMap is \t" + obj.equals(testObj));
     Assert.assertEquals(obj, testObj);
   }
-  
+
   @Test
   public void testReadXmlFile() {
     try {
-      Object obj = 
-        XMLReader.xmlStreamToObject(new FileInputStream("person.xml"), new ZHandler());
+      Object obj = XMLReader.xmlStreamToObject(
+          new FileInputStream("person.xml"), new ZHandler());
       // System.out.println(obj);
     } catch (FileNotFoundException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    
+
   }
-  
+
   @Test
   public void testRWExtendsObject() {
     BBean bean = new BBean();
     bean.setName("a");
     bean.setaNumber(123);
-    
+
     String str = XMLWriter.objectToXmlString(bean);
     Object obj = XMLReader.xmlStringToObject(str);
     Assert.assertEquals(bean, obj);
-    
+
     bean.setName("b");
     Assert.assertFalse(bean.equals(obj));
   }
-  
+
+  @Test
+  public void testArrayInArray() {
+    Object expected = new Object[] { new String[][] { { "a", "b" }, { "c", "d" } } };
+    String xmlString = XMLWriter.objectToXmlString(expected);
+    System.out.println(xmlString);
+    Object actual = XMLReader.xmlStringToObject(xmlString);
+    Assert.assertEquals(expected, actual);
+  }
+
 }
