@@ -5,3 +5,5 @@
 支持任何Java对象的set和get方法
 支持Java基础类型转换
 支持对象循环引用
+
+增加hook文件，用来关联3zso和github代码库。
