@@ -23,7 +23,7 @@ public class ZHandler extends AbsHandler {
 
   private static final long serialVersionUID = 1L;
 
-  private boolean isDebug = false;
+  private boolean isDebug = true;
 
   private int currLineNum = 0;
 
@@ -158,7 +158,7 @@ public class ZHandler extends AbsHandler {
   public void startElement(String uri, String localName, String qName,
       Attributes attributes) throws SAXException {
     if (isDebug)
-      System.out.println("Line: " + currLineNum++ + " " + qName + " " + depth
+      System.out.println("Line: " + currLineNum++ + space[depth] + qName + " " + depth
           + " " + attributes.getValue("class"));
 
     characters.delete(0, characters.length());
@@ -333,10 +333,10 @@ public class ZHandler extends AbsHandler {
     return methodName;
   }
 
+  String[] space = {"", " ", "  ", "   ", "    ", "     ", "      ", "       ", "        ", "          "};
   @Override
   public void endElement(String uri, String localName, String qName)
       throws SAXException {
-    // System.out.println(qName + " " + depth-- + " depth " + oldDepth);
     processCharacters(characters);
 
     if (rootName.equals(qName)) {
@@ -352,6 +352,7 @@ public class ZHandler extends AbsHandler {
 
     int tempItemIndex = depth - 1;
 
+//    System.out.println( space[depth] + qName + " " +  this.tempItemObject.get(tempItemIndex).getClass().getName());
     if (this.tempItemObject.size() > tempItemIndex && tempItemIndex > 0) {
       Object obj = this.tempItemObject.get(tempItemIndex - 1);
       Object curr = this.tempItemObject.get(tempItemIndex);
@@ -412,6 +413,7 @@ public class ZHandler extends AbsHandler {
           } catch (IllegalArgumentException e) {
             System.out.println("error: " + m + " " + curr.getClass().getName());
             e.printStackTrace();
+            System.exit(1);
           } catch (IllegalAccessException e) {
             e.printStackTrace();
           } catch (InvocationTargetException e) {
@@ -434,7 +436,7 @@ public class ZHandler extends AbsHandler {
 
     }
     if (isDebug)
-      System.err.println("Line: " + currLineNum++ + " " + qName + " depth: "
+      System.err.println("Line: /" + currLineNum++ + space[depth] + qName + " depth: "
           + depth + " obj: " + this.currValue);
     isEndElement = true;
     // isStartElement = false;
