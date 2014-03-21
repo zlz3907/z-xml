@@ -26,8 +26,7 @@ Z-XML可以用来在XML文件和Java对象之间进行互相转换，而不需�
 ```
   Jre1.6或以上版本
 ```
-- 下载地址
-
+- [下载](https://github.com/zlz3907/z-dist/raw/master/z-xml/z-xml-1.0.jar)
 ### 使用示例
 
 #### 将一个Java对象写到一个XML文件中
