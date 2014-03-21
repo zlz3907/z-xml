@@ -1,0 +1,10 @@
+#+title: Z-XML
+#+author: Bliss Chung
+
+
+
+*Z-XML是一个小巧灵活的XML解析工具。*
+
+* 什么是Z-XML？
+  Z-XML是一个小巧灵活的XML解析工具。Z-XML可以用来在XML文件和JavaBean之
+  间进行互相转换，
