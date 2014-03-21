@@ -18,4 +18,5 @@
 cobertura.ser
 *.cache
 no
-
+\#*
+.#*

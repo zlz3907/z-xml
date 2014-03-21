@@ -17,7 +17,6 @@ import com.ztools.xml.bean.BBean;
 import com.ztools.xml.bean.House;
 import com.ztools.xml.bean.Person;
 import com.ztools.xml.bean.Room;
-
 public final class XMLTest {
 
   public static Object creatTestObject() {
@@ -238,6 +237,8 @@ public final class XMLTest {
     System.out.println(xmlString);
     Object actual = XMLReader.xmlStringToObject(xmlString);
     Assert.assertTrue(XMLBean.equals(expected, actual));
+    
+    System.out.println(XMLWriter.objectToXmlString(new String[]{"hello", "world"}));
   }
 
 }

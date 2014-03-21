@@ -32,8 +32,8 @@ public class ZHandler extends AbsHandler {
   private String rootName;
 
   private List<Object> tempItemObject = new ArrayList<Object>();
-  private String tempItemName;
-  private Object currObject;
+  private String tempItemName = null;
+  private Object currObject = null;
   private boolean isBaseType = false;
 
   private boolean isEndElement = false;
@@ -52,6 +52,7 @@ public class ZHandler extends AbsHandler {
   private Map<Integer, Boolean> isMapEntry = new HashMap<Integer, Boolean>();
   private Map<Integer, Object> currKey = new HashMap<Integer, Object>();
   private Map<Integer, Object> currValue = new HashMap<Integer, Object>();
+  private String tempHashcode = null;
 
   public String getCharset() {
     return charset;
@@ -64,11 +65,24 @@ public class ZHandler extends AbsHandler {
   public ZHandler() {
     super();
   }
+  
+  private void debug(String flag, String qName, Object attributes) {
+	if (isDebug) {
+        System.out.println(flag + ": " + currLineNum++ + "\t" + space[depth]
+                           + qName + "\t" + depth + "\t" 
+                           + (tempItemObject.size()>0 ? 
+                        		   tempItemObject.get(tempItemObject.size()-1).getClass().getName()
+                        		   :null)
+                           + "\t" + currObject
+                           + "\t" + attributes);
+    }
+  }
 
   @Override
   public void startDocument() throws SAXException {
     if (isDebug) {
-      System.out.println("Line: " + currLineNum++);
+      System.out.println("Line\tQName\tdepth\ttempItemName\ttempItemObject"
+      		+ "\tcurrObject\tattributes");
     }
   }
 
@@ -157,94 +171,93 @@ public class ZHandler extends AbsHandler {
   @Override
   public void startElement(String uri, String localName, String qName,
       Attributes attributes) throws SAXException {
-    if (isDebug)
-      System.out.println("Line: " + currLineNum++ + " " + qName + " " + depth
-          + " " + attributes.getValue("class"));
-
-    characters.delete(0, characters.length());
-
-    if (isRoot) {
-      rootName = qName;
-      isRoot = false;
-      // iXmlProcess = XMLProcessFactory.getXmlProcess(rootName);
-      defaultClassName = attributes.getValue("class");
-    }
-    // is root
-    if (this.rootName.equals(qName)) {
-      this.tempItemName = qName;
-      depth++;
-      return;
-    }
-
-    this.tempItemName = qName;
-    tempHashcode = attributes.getValue("hashcode");
     try {
-      String className = attributes.getValue("class");
-      if (null == className || "".equals(className)) {
-        // set default class name
-        className = Object.class.getName();// this.bean.getClass().getName();
-                                           // //
-                                           // this.bean.getBeanClass().getName();
+      characters.delete(0, characters.length());
+
+      if (isRoot) {
+        rootName = qName;
+        isRoot = false;
+        // iXmlProcess = XMLProcessFactory.getXmlProcess(rootName);
+        defaultClassName = attributes.getValue("class");
+      }
+      // is root
+      if (this.rootName.equals(qName)) {
+        this.tempItemName = qName;
+        depth++;
+        return;
       }
 
-      if (null == className) {
-        className = defaultClassName;
-      }
-      Class<?> c = Class.forName(className);
-      currObject = parseValue("0", c);
+      this.tempItemName = qName;
+      tempHashcode = attributes.getValue("hashcode");
+      try {
+        String className = attributes.getValue("class");
+        if (null == className || "".equals(className)) {
+          // set default class name
+          className = Object.class.getName();// this.bean.getClass().getName();
+          // //
+          // this.bean.getBeanClass().getName();
+        }
 
-      // if ("true".equals(attributes.getValue("isMapEntry"))) {
-      // isMapEntry = true;
-      // }
+        if (null == className) {
+          className = defaultClassName;
+        }
+        Class<?> c = Class.forName(className);
+        currObject = parseValue("0", c);
 
-      if (c.isArray()) {
-        currObject = Array.newInstance(c.getComponentType(), 0);
-      } else if (null == currObject) {
-        isBaseType = false;
-        currObject = encapsulateObject(attributes, c);
-        String hashcode = attributes.getValue("hashcode");
-        if (null != hashcode && !"".equals(hashcode)) {
-          Object obj = objMap.get(hashcode);
-          if (null != obj) {
-            currObject = obj;
-          } else {
-            objMap.put(hashcode, currObject);
+        // if ("true".equals(attributes.getValue("isMapEntry"))) {
+        // isMapEntry = true;
+        // }
+
+        if (c.isArray()) {
+          currObject = Array.newInstance(c.getComponentType(), 0);
+        } else if (null == currObject) {
+          isBaseType = false;
+          currObject = encapsulateObject(attributes, c);
+          String hashcode = attributes.getValue("hashcode");
+          if (null != hashcode && !"".equals(hashcode)) {
+            Object obj = objMap.get(hashcode);
+            if (null != obj) {
+              currObject = obj;
+            } else {
+              objMap.put(hashcode, currObject);
+            }
           }
-        }
-      } else {
-        if ("0".equals(currObject)) {
-          currObject = "";
-        }
-        if ("0".equals(tempHashcode)) {
-          currObject = parseValue(null, c);
         } else {
-          Object obj = objMap.get(tempHashcode);
-          if (null != obj)
-            currObject = obj;
+          if ("0".equals(currObject)) {
+            currObject = "";
+          }
+          if ("0".equals(tempHashcode)) {
+            currObject = parseValue(null, c);
+          } else {
+            Object obj = objMap.get(tempHashcode);
+            if (null != obj)
+              currObject = obj;
+          }
+          isBaseType = true;
         }
-        isBaseType = true;
+
+      } catch (ClassNotFoundException e) {
+        e.printStackTrace();
       }
 
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    }
+      int tempItemIndex = depth - 1;
+      if (tempItemIndex < this.tempItemObject.size()) {
+        this.tempItemObject.set(tempItemIndex, currObject);
+      } else {
+        this.tempItemObject.add(tempItemIndex, currObject);
+      }
 
-    int tempItemIndex = depth - 1;
-    if (tempItemIndex < this.tempItemObject.size()) {
-      this.tempItemObject.set(tempItemIndex, currObject);
-    } else {
-      this.tempItemObject.add(tempItemIndex, currObject);
-    }
+      if ("true".equals(attributes.getValue("isMapEntry"))) {
+        isMapEntry.put(tempItemIndex, true);
+      }
 
-    if ("true".equals(attributes.getValue("isMapEntry"))) {
-      isMapEntry.put(tempItemIndex, true);
-    }
+      isEndElement = false;
+      depth++;
+    } finally {
+      debug("Start", qName, attributes);
+    };
 
-    isEndElement = false;
-    depth++;
   }
-
-  private String tempHashcode = null;
 
   @Override
   public void characters(char[] ch, int start, int length) throws SAXException {
@@ -278,9 +291,7 @@ public class ZHandler extends AbsHandler {
       }
 
     }
-    if (isDebug)
-      System.out.println("Line: " + currLineNum++ + " character: ["
-          + characters.toString() + "]");
+    debug("Character", null, characters);
   }
 
   private Object parseValue(String value, Class<?> type) {
@@ -333,113 +344,116 @@ public class ZHandler extends AbsHandler {
     return methodName;
   }
 
+  String[] space = {"", " ", "  ", "   ", "    ", "     ", "      ", "       ", "        ", "          "};
   @Override
   public void endElement(String uri, String localName, String qName)
       throws SAXException {
-    // System.out.println(qName + " " + depth-- + " depth " + oldDepth);
-    processCharacters(characters);
+    try {
+      processCharacters(characters);
+      if (rootName.equals(qName)) {
+        return;
+      }
+      depth--;
 
-    if (rootName.equals(qName)) {
-      return;
-    }
-    depth--;
+      isBaseType = false;
+      if (!qName.equals(tempItemName) && isEndElement) {
+        // this.oldDepth--;
+        tempItemName = qName;
+      }
 
-    isBaseType = false;
-    if (!qName.equals(tempItemName) && isEndElement) {
-      // this.oldDepth--;
-      tempItemName = qName;
-    }
+      int tempItemIndex = depth - 1;
 
-    int tempItemIndex = depth - 1;
+      //    System.out.println( space[depth] + qName + " " +  this.tempItemObject.get(tempItemIndex).getClass().getName());
+      if (this.tempItemObject.size() > tempItemIndex && tempItemIndex > 0) {
+        Object parent = this.tempItemObject.get(tempItemIndex - 1);
+        Object curr = this.tempItemObject.get(tempItemIndex);
+        if (parent.getClass().isArray()) {
+          int length = Array.getLength(parent);
+          Object arr = Array.newInstance(parent.getClass().getComponentType(),
+                                         length + 1);
+          for (int i = 0; i < length; i++) {
+            Array.set(arr, i, Array.get(parent, i));
+          }
+          Array.set(arr, length, curr);
+          this.tempItemObject.set(tempItemIndex - 1, arr);
+        } else if (parent instanceof Map<?, ?>) {
+          Map<Object, Object> map = (Map<Object, Object>) parent;
 
-    if (this.tempItemObject.size() > tempItemIndex && tempItemIndex > 0) {
-      Object obj = this.tempItemObject.get(tempItemIndex - 1);
-      Object curr = this.tempItemObject.get(tempItemIndex);
-      if (obj.getClass().isArray()) {
-        int length = Array.getLength(obj);
-        Object arr = Array.newInstance(obj.getClass().getComponentType(),
-            length + 1);
-        for (int i = 0; i < length; i++) {
-          Array.set(arr, i, Array.get(obj, i));
-        }
-        Array.set(arr, length, curr);
-        this.tempItemObject.set(tempItemIndex - 1, arr);
-      } else if (obj instanceof Map<?, ?>) {
-        Map<Object, Object> map = (Map<Object, Object>) obj;
+          Boolean isME = isMapEntry.get(tempItemIndex);
+          if (null != isME && isME) {
+            isMapEntry.put(tempItemIndex, false);
+            map.put(currKey.get(tempItemIndex + 1),
+                    currValue.get(tempItemIndex + 1));
+            currKey.put(tempItemIndex + 1, null);
+            currValue.put(tempItemIndex + 1, null);
+          } else {
+            map.put(qName, curr);
+          }
 
-        Boolean isME = isMapEntry.get(tempItemIndex);
-        if (null != isME && isME) {
-          isMapEntry.put(tempItemIndex, false);
-          map.put(currKey.get(tempItemIndex + 1),
-              currValue.get(tempItemIndex + 1));
-          currKey.put(tempItemIndex + 1, null);
-          currValue.put(tempItemIndex + 1, null);
-        } else {
-          map.put(qName, curr);
-        }
+        } else if (parent instanceof Collection<?>) {
+          Collection<Object> c = (Collection<Object>) parent;
+          c.add(curr);
+          this.tempItemObject.set(tempItemIndex - 1, c);
+        } else if (null != parent) {
+          // String methodName = getMethodName(qName);
+          Boolean isME = isMapEntry.get(tempItemIndex);
+          if (null != isME && isME
+              && ("key".equals(qName) || "value".equals(qName))) {
 
-      } else if (obj instanceof Collection<?>) {
-        Collection<Object> c = (Collection<Object>) obj;
-        c.add(curr);
-        this.tempItemObject.set(tempItemIndex - 1, c);
-      } else if (null != obj) {
-        // String methodName = getMethodName(qName);
-        Boolean isME = isMapEntry.get(tempItemIndex);
-        if (null != isME && isME
-            && ("key".equals(qName) || "value".equals(qName))) {
-
-        } else {
-          Method m = null;
-          try {
-            Method[] ms = extractMethods(obj); // obj.getClass().getMethods();
-            for (int i = 0; i < ms.length; i++) {
-              if (ms[i].getName().toLowerCase()
-                  .equals("set" + qName.toLowerCase())) {
-                m = ms[i];
-                break;
+          } else {
+            Method m = null;
+            try {
+              Method[] ms = extractMethods(parent); // obj.getClass().getMethods();
+              for (int i = 0; i < ms.length; i++) {
+                if (ms[i].getName().toLowerCase()
+                    .equals("set" + qName.toLowerCase())) {
+                  m = ms[i];
+                  break;
+                }
               }
+              // m = obj.getClass().getMethod(methodName,
+              // curr.getClass());
+              if (null != m) {
+                m.invoke(parent, new Object[] { curr });
+                this.tempItemObject.set(tempItemIndex - 1, parent);
+              }
+            } catch (SecurityException e) {
+              e.printStackTrace();
+              // } catch (NoSuchMethodException e) {
+              // e.printStackTrace();
+            } catch (IllegalArgumentException e) {
+              System.out.println("error: " + m + " " + curr.getClass().getName());
+              e.printStackTrace();
+              debug("Error", qName, parent.getClass().getName());
+              System.exit(1);
+            } catch (IllegalAccessException e) {
+              e.printStackTrace();
+            } catch (InvocationTargetException e) {
+              e.printStackTrace();
             }
-            // m = obj.getClass().getMethod(methodName,
-            // curr.getClass());
-            if (null != m) {
-              m.invoke(obj, new Object[] { curr });
-              this.tempItemObject.set(tempItemIndex - 1, obj);
-            }
-          } catch (SecurityException e) {
-            e.printStackTrace();
-            // } catch (NoSuchMethodException e) {
-            // e.printStackTrace();
-          } catch (IllegalArgumentException e) {
-            System.out.println("error: " + m + " " + curr.getClass().getName());
-            e.printStackTrace();
-          } catch (IllegalAccessException e) {
-            e.printStackTrace();
-          } catch (InvocationTargetException e) {
-            e.printStackTrace();
           }
         }
-      }
 
-      if ("key".equals(qName)) {
-        currKey.put(tempItemIndex, curr);
-      }
-      if ("value".equals(qName)) {
-        currValue.put(tempItemIndex, curr);
-      }
+        if ("key".equals(qName)) {
+          currKey.put(tempItemIndex, curr);
+        }
+        if ("value".equals(qName)) {
+          currValue.put(tempItemIndex, curr);
+        }
 
-      if ("entry".equalsIgnoreCase(qName)) {
-        // currKey.put(tempItemIndex, null);
-        // currValue.put(tempItemIndex, null);
-      }
+        if ("entry".equalsIgnoreCase(qName)) {
+          // currKey.put(tempItemIndex, null);
+          // currValue.put(tempItemIndex, null);
+        }
 
+      }
+      // isStartElement = false;
+      // depth--;
+    } finally {
+      isEndElement = true;
+      debug("End", qName, tempItemObject.get(depth - 1).getClass().getName());
+      currObject = null;
     }
-    if (isDebug)
-      System.err.println("Line: " + currLineNum++ + " " + qName + " depth: "
-          + depth + " obj: " + this.currValue);
-    isEndElement = true;
-    // isStartElement = false;
-    // depth--;
-    currObject = null;
   }
 
   public Object getBean() {
