@@ -237,6 +237,8 @@ public final class XMLTest {
     System.out.println(xmlString);
     Object actual = XMLReader.xmlStringToObject(xmlString);
     Assert.assertTrue(XMLBean.equals(expected, actual));
+    
+    System.out.println(XMLWriter.objectToXmlString(new String[]{"hello", "world"}));
   }
 
 }
