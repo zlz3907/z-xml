@@ -17,7 +17,6 @@ import com.ztools.xml.bean.BBean;
 import com.ztools.xml.bean.House;
 import com.ztools.xml.bean.Person;
 import com.ztools.xml.bean.Room;
-
 public final class XMLTest {
 
   public static Object creatTestObject() {
@@ -240,25 +239,4 @@ public final class XMLTest {
     Assert.assertTrue(XMLBean.equals(expected, actual));
   }
 
-  @Test
-  public void testEmptyList() {
-//    List<Object> list = new ArrayList<Object>();
-//    Person p = new Person();
-//    p.setObjlist(list);
-//    String xmlstr = XMLWriter.objectToXmlString(list);
-//    System.out.println(xmlstr);
-//    Object obj = XMLReader.xmlStringToObject(xmlstr);
-//    String xmlstr2 = XMLWriter.objectToXmlString(obj);
-//    Assert.assertEquals(xmlstr.replaceAll(" hashcode=\"-?\\d+\"", ""),
-//        xmlstr2.replaceAll(" hashcode=\"-?\\d+\"", ""));
-    System.out.println("Testing: ");
-    try {
-      Object ob = XMLReader.xmlStreamToObject(new FileInputStream("modelcard.xml"), null);
-      
-    } catch (FileNotFoundException e) {
-      // TODO Auto-generated catch block
-        e.printStackTrace();
-    }
-  }
-  
 }
