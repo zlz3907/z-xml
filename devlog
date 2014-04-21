@@ -1,0 +1,75 @@
+#+TITLE:  Z-XML工具包开发日志
+#+AUTHOR: 钟立志
+#+EMAIL:  bliss AT 3zso.com
+
+* What is Z-XML?
+
+* Z-XML News
+
+* Features
+
+* Requirements
+
+* Quick Start
+基于SAX方式解析
+不依赖其他任何包
+不需要预定义数据格式
+支持标准的JavaBean
+支持任何Java对象的set和get方法
+支持Java基础类型转换
+支持对象循环引用
+
+增加hook文件，用来关联3zso和github代码库。
+
+* Bugs
+** 由于ModelSearchCarBean这个类算定义了hashcode方法，导致hashcode出现重得的Code
+   - 错误提示：
+     #+BEGIN_SRC java
+       error: public void com.jcm.auto.beans.ModelSearchCardBean
+         .setDisplments(java.util.List) com.jcm.auto.beans.ModelSearchCardBean
+       java.lang.IllegalArgumentException: argument type mismatch
+               at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+               at sun.reflect.NativeMethodAccessorImpl
+                    .invoke(NativeMethodAccessorImpl.java:57)
+               at sun.reflect.DelegatingMethodAccessorImpl
+                    .invoke(DelegatingMethodAccessorImpl.java:43)
+               at java.lang.reflect.Method.invoke(Method.java:606)
+               at com.ztools.xml.ZHandler.endElement(ZHandler.java:417)
+               at com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser
+                    .endElement(AbstractSAXParser.java:609)
+               at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl
+                    .scanEndElement(XMLDocumentFragmentScannerImpl.java:1789)
+       // ...
+     #+END_SRC
+   - 产生错误的xml文件：
+     #+BEGIN_SRC xml
+       <XMLBean class="">
+       <HashMap hashcode="122925809" class="java.util.HashMap">
+       <entry isMapEntry="true">
+       <key class="java.lang.String">
+       <![CDATA[ 奥迪a3(进口) ]]>
+       </key>
+       <value hashcode="31" class="com.jcm.auto.beans.ModelSearchCardBean">
+       <modelName class="java.lang.String">
+       <![CDATA[ 奥迪a3(进口) ]]>
+       </modelName>
+       <modelId class="java.lang.Integer">31</modelId>
+
+       <!-- ... -->
+
+       <displments hashcode="31" class="java.util.ArrayList">
+       <element class="java.lang.Float">0.0</element>
+       </displments>
+       </value>
+       </entry>
+       </HashMap>
+       </XMLBean>
+     #+END_SRC
+     上面的文件中，有两行有着相同的 =hashcode= :
+     #+BEGIN_SRC xml
+       <!-- ... -->
+       <value hashcode="31" class="com.jcm.auto.beans.ModelSearchCardBean">
+       <!-- ... -->
+       <displments hashcode="31" class="java.util.ArrayList">
+       <!-- ... -->
+     #+END_SRC

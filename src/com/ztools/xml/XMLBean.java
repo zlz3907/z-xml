@@ -1,6 +1,8 @@
 package com.ztools.xml;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 
 //import com.ztools.conf.Environment;
@@ -59,9 +61,9 @@ public class XMLBean implements Serializable {
   }
 
   public String getPath() {
-    //        if (isAbsolute)
+    // if (isAbsolute)
     return path;
-    //        return Environment.getContext() + path;
+    // return Environment.getContext() + path;
   }
 
   public void setPath(String path) {
@@ -114,6 +116,44 @@ public class XMLBean implements Serializable {
 
   public void setHandler(AbsHandler handler) {
     this.handler = handler;
+  }
+
+  public static boolean equals(Object a, Object b) {
+    if (a != null && null != b) {
+      Method[] ms = a.getClass().getMethods();
+      if (null != ms) {
+        for (int i = 0; i < ms.length; i++) {
+          String fieldName = ms[i].getName();
+          if (!"getClass".equals(fieldName) && !"get".equals(fieldName)
+              && !"is".equals(fieldName)
+              && 0 == ms[i].getParameterTypes().length
+              && (fieldName.startsWith("get") || fieldName.startsWith("is"))) {
+            try {
+              if (!equalsField(ms[i].invoke(a), ms[i].invoke(b))) {
+                return false;
+              }
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
+          }
+        }
+      }
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  private static boolean equalsField(Object a, Object b) {
+    if (null != a) {
+      if (a.getClass().isEnum()) {
+        return null != b && a.toString().equals(b.toString());
+      } else if (a.getClass().isArray()) {
+        return Arrays.equals((byte[]) a, (byte[]) b);
+      }
+      return a.equals(b);
+    }
+    return null == b;
   }
 
 }

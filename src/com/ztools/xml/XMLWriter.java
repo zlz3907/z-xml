@@ -304,7 +304,11 @@ public class XMLWriter implements Serializable {
     }
 
     if (null == name) {
-      name = obj.getClass().getSimpleName();
+      if (!obj.getClass().isArray()) {
+        name = obj.getClass().getSimpleName();
+      } else {
+        name = obj.getClass().getSimpleName().replaceAll("\\[\\]", "") + "Arr";
+      }
     } else {
       int begin = 0;
       int end = 0;
@@ -354,7 +358,7 @@ public class XMLWriter implements Serializable {
       int length = Array.getLength(obj);
       for (int i = 0; i < length; i++) {
         Object element = Array.get(obj, i);
-        objectToXmlString(element, sbd, set, element.getClass().getSimpleName());
+        objectToXmlString(element, sbd, set, "element");
       }
 
       // Object[] coll = (Object[]) obj;
@@ -372,7 +376,7 @@ public class XMLWriter implements Serializable {
       Collection<?> coll = (Collection<?>) obj;
       for (Object o : coll) {
         if (null != o)
-          objectToXmlString(o, sbd, set, o.getClass().getSimpleName());
+          objectToXmlString(o, sbd, set, "element");
       }
       sbd.append("</").append(name).append(">");
 
