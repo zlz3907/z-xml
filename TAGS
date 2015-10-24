@@ -1,0 +1,327 @@
+
+test/unit/com/example/TestHello.java,85
+public class TestHello 5,50
+  public void testSayHello(TestHello.testSayHello8,87
+
+test/unit/com/ztools/xml/bean/Person.java,2230
+public class Person 6,82
+    private String name;Person.name7,105
+    private String age;Person.age8,131
+    private String sex;Person.sex9,156
+    private List<House> houses;Person.houses10,181
+    private List<String> children;Person.children11,214
+    private List<Object> objlist;Person.objlist12,250
+    private Person father;Person.father13,285
+    private int wifeCount;Person.wifeCount14,313
+    private Date date;Person.date15,341
+    private Object[] arr;Person.arr16,365
+    private Integer i;Person.i17,392
+    private boolean b;Person.b18,416
+    private Boolean bObj;Person.bObj19,440
+    public boolean isB(Person.isB21,469
+    public void setB(Person.setB25,525
+    public Boolean getbObj(Person.getbObj29,590
+    public void setbObj(Person.setbObj33,653
+    public Integer getI(Person.getI37,730
+    public void setI(Person.setI41,787
+    public Object[] getArr(Person.getArr45,852
+    public void setArr(Person.setArr49,914
+    public Date getDate(Person.getDate53,988
+    public void setDate(Person.setDate57,1048
+    public int getWifeCount(Person.getWifeCount61,1122
+    public void setWifeCount(Person.setWifeCount65,1191
+    public Person getFather(Person.getFather69,1284
+    public void setFather(Person.setFather73,1350
+    public List<Object> getObjlist(Person.getObjlist77,1434
+    public void setObjlist(Person.setObjlist81,1508
+    private List<Integer> thr;Person.thr85,1602
+    public List<Integer> getThr(Person.getThr87,1636
+    public void setThr(Person.setThr91,1703
+    public List<String> getChildren(Person.getChildren95,1782
+    public void setChildren(Person.setChildren99,1858
+    public String getName(Person.getName103,1956
+    public void setName(Person.setName107,2018
+    public String getAge(Person.getAge111,2094
+    public void setAge(Person.setAge115,2154
+    public String getSex(Person.getSex119,2226
+    public void setSex(Person.setSex123,2286
+    public List<House> getHouses(Person.getHouses127,2358
+    public void setHouses(Person.setHouses131,2429
+    public Person(Person.Person135,2518
+    public Person(Person.Person138,2550
+    public String toString(Person.toString145,2709
+
+test/unit/com/ztools/xml/bean/ABean.java,407
+public class ABean 9,126
+  private ObjectId id ABean.id12,153
+  public final ObjectId getId(ABean.getId19,317
+  public final void setId(ABean.setId29,469
+  private String name;ABean.name33,535
+  public final String getName(ABean.getName40,684
+  public final void setName(ABean.setName50,844
+  public boolean equals(ABean.equals60,1016
+  private boolean equalsField(ABean.equalsField85,1814
+
+test/unit/com/ztools/xml/bean/House.java,644
+public class House 5,54
+    private String name;House.name6,75
+    private String add;House.add7,100
+    private int size;House.size8,124
+    private List<Room> rooms;House.rooms9,146
+    public String getName(House.getName11,177
+    public void setName(House.setName15,235
+    public String getAdd(House.getAdd19,307
+    public void setAdd(House.setAdd23,363
+    public int getSize(House.getSize27,431
+    public void setSize(House.setSize31,486
+    public List<Room> getRooms(House.getRooms35,555
+    public void setRooms(House.setRooms39,619
+    public House(House.House43,699
+    public House(House.House46,727
+
+test/unit/com/ztools/xml/bean/BBean.java,179
+public class BBean 7,92
+  private int aNumber;BBean.aNumber8,127
+  public final int getaNumber(BBean.getaNumber15,279
+  public final void setaNumber(BBean.setaNumber25,451
+
+test/unit/com/ztools/xml/bean/ObjectId.java,2491
+public class ObjectId 38,1244
+    private static final long serialVersionUID ObjectId.serialVersionUID40,1324
+    static final Logger LOGGER ObjectId.LOGGER42,1397
+    static int dataType=ObjectId.dataType44,1476
+    public static ObjectId get(ObjectId.get49,1568
+    public static String getObjectId(ObjectId.getObjectId54,1673
+    public static boolean isValid(ObjectId.isValid63,1940
+    public static ObjectId massageToObjectId(ObjectId.massageToObjectId91,2847
+    public ObjectId(ObjectId.ObjectId106,3211
+    public ObjectId(ObjectId.ObjectId110,3313
+    public ObjectId(ObjectId.ObjectId114,3406
+    public ObjectId(ObjectId.ObjectId125,3751
+    public ObjectId(ObjectId.ObjectId129,3818
+    public ObjectId(ObjectId.ObjectId147,4369
+    public ObjectId(ObjectId.ObjectId163,4810
+    public ObjectId(ObjectId.ObjectId172,5006
+    public int hashCode(ObjectId.hashCode179,5191
+    public boolean equals(ObjectId.equals186,5327
+    public String toStringBabble(ObjectId.toStringBabble200,5654
+    public String toStringMongod(ObjectId.toStringMongod204,5748
+    public String convertType(ObjectId.convertType221,6205
+    public byte[] toByteArray(ObjectId.toByteArray230,6421
+    static String _pos(ObjectId._pos240,6696
+    public static String babbleToMongod(ObjectId.babbleToMongod244,6800
+    public String toString(ObjectId.toString257,7206
+    int _compareUnsigned(ObjectId._compareUnsigned261,7276
+    public int compareTo(ObjectId.compareTo274,7638
+    public int getMachine(ObjectId.getMachine290,7996
+    public long getTime(ObjectId.getTime297,8122
+    public int getTimeSecond(ObjectId.getTimeSecond304,8246
+    public int getInc(ObjectId.getInc308,8307
+    public int _time(ObjectId._time312,8360
+    public int _machine(ObjectId._machine315,8412
+    public int _inc(ObjectId._inc318,8470
+    public boolean isNew(ObjectId.isNew322,8521
+    public void notNew(ObjectId.notNew326,8577
+    public static int getGenMachineId(ObjectId.getGenMachineId333,8735
+    public static int getCurrentInc(ObjectId.getCurrentInc340,8880
+    final int _time;ObjectId._time344,8958
+    final int _machine;ObjectId._machine345,8979
+    final int _inc;ObjectId._inc346,9003
+    boolean _new;ObjectId._new348,9024
+    public static int _flip(ObjectId._flip350,9043
+    private static AtomicInteger _nextInc ObjectId._nextInc359,9297
+    private static final int _genmachine;ObjectId._genmachine361,9399
+
+test/unit/com/ztools/xml/bean/Room.java,301
+public class Room 3,30
+    private int roomNumber;Room.roomNumber4,50
+    public int getRoomNumber(Room.getRoomNumber6,79
+    public void setRoomNumber(Room.setRoomNumber10,146
+    public Room(Room.Room14,243
+    public Room(Room.Room16,269
+    public String toString(Room.toString21,366
+
+test/unit/com/ztools/xml/XMLTest.java,591
+public final class XMLTest 20,477
+  public static Object creatTestObject(XMLTest.creatTestObject22,509
+  public void testReadAndWriteXmlFile(XMLTest.testReadAndWriteXmlFile80,2229
+  public void testObjectToXmlString(XMLTest.testObjectToXmlString103,3091
+  public void testNullValueInMap(XMLTest.testNullValueInMap123,3975
+  public void testMapInMap(XMLTest.testMapInMap179,5813
+  public void testReadXmlFile(XMLTest.testReadXmlFile207,6758
+  public void testRWExtendsObject(XMLTest.testRWExtendsObject220,7087
+  public void testArrayInArray(XMLTest.testArrayInArray234,7437
+
+src/com/ztools/xml/AbsHandler.java,122
+abstract public class AbsHandler 7,105
+    private static final long serialVersionUID AbsHandler.serialVersionUID9,190
+
+src/com/ztools/xml/XMLReader.java,419
+public class XMLReader 13,284
+    private static final long serialVersionUID XMLReader.serialVersionUID17,355
+    public static void readXMLBean(XMLReader.readXMLBean19,429
+    public static Object  xmlStringToObject(XMLReader.xmlStringToObject49,1603
+    public static Object xmlStringToObject(XMLReader.xmlStringToObject53,1717
+    public static Object xmlStreamToObject(XMLReader.xmlStreamToObject61,1998
+
+src/com/ztools/xml/XMLHandler.java,1467
+public class XMLHandler 20,477
+  private static final long serialVersionUID XMLHandler.serialVersionUID25,546
+  private XMLBean xmlBean;XMLHandler.xmlBean26,617
+  private String rootName;XMLHandler.rootName27,645
+  private String tempHashcode XMLHandler.tempHashcode29,675
+  private List<Object> tempItemObject XMLHandler.tempItemObject30,714
+  private String tempItemName;XMLHandler.tempItemName31,780
+  private Object currObject;XMLHandler.currObject32,812
+  private int depth;XMLHandler.depth34,870
+  private boolean isBaseType XMLHandler.isBaseType35,892
+  private boolean isEndElement XMLHandler.isEndElement38,978
+  private Map<XMLHandler.Map40,1064
+  private Map<String, Object> objMap XMLHandler.objMap40,1064
+  public XMLHandler(XMLHandler.XMLHandler42,1137
+  public void startDocument(XMLHandler.startDocument51,1336
+  private Field[] getFields(XMLHandler.getFields58,1576
+  private Object encapsulateObject(XMLHandler.encapsulateObject78,2117
+  private boolean isRoot XMLHandler.isRoot127,3768
+  public void startElement(XMLHandler.startElement130,3817
+  public void characters(XMLHandler.characters208,6256
+  private Object parseValue(XMLHandler.parseValue225,6845
+  private String getMethodName(XMLHandler.getMethodName271,8810
+  @SuppressWarnings(XMLHandler.@SuppressWarnings278,9043
+  public void endDocument(XMLHandler.endDocument337,11011
+  public Object getXmlObject(XMLHandler.getXmlObject345,11224
+
+src/com/ztools/xml/XMLBean.java,1793
+public class XMLBean 13,198
+  private static final long serialVersionUID XMLBean.serialVersionUID17,263
+  private final String ROOT_NAME XMLBean.ROOT_NAME18,332
+  private String path;XMLBean.path19,378
+  private String rootName;XMLBean.rootName20,401
+  private Class<?> beanClass;XMLBean.beanClass21,428
+  private List<?> itemList;XMLBean.itemList22,458
+  private Integer number;XMLBean.number23,486
+  private boolean isAbsolute XMLBean.isAbsolute24,512
+  private Object bean;XMLBean.bean25,549
+  private AbsHandler handler;XMLBean.handler26,572
+  private String charset XMLBean.charset28,603
+  public Object getBean(XMLBean.getBean30,640
+  public void setBean(XMLBean.setBean34,690
+  public Integer getNumber(XMLBean.getNumber38,754
+  public void setNumber(XMLBean.setNumber42,809
+  public XMLBean(XMLBean.XMLBean46,882
+  public XMLBean(XMLBean.XMLBean51,972
+  public String getPath(XMLBean.getPath63,1226
+  public void setPath(XMLBean.setPath69,1346
+  public Class<?> getBeanClass(XMLBean.getBeanClass73,1410
+  public void setBeanClass(XMLBean.setBeanClass77,1472
+  public List<?> getItemList(XMLBean.getItemList81,1558
+  public void setItemList(XMLBean.setItemList85,1617
+  public String getRootName(XMLBean.getRootName89,1698
+  public void setRootName(XMLBean.setRootName93,1756
+  public String getCharset(XMLBean.getCharset97,1836
+  public void setCharset(XMLBean.setCharset101,1892
+  public boolean isAbsolute(XMLBean.isAbsolute105,1968
+  public void setAbsolute(XMLBean.setAbsolute109,2028
+  public AbsHandler getHandler(XMLBean.getHandler113,2115
+  public void setHandler(XMLBean.setHandler117,2175
+  public static boolean equals(XMLBean.equals121,2255
+  private static boolean equalsField(XMLBean.equalsField147,3063
+
+src/com/ztools/xml/XMLWriter.java,3350
+public class XMLWriter 21,525
+  private static final long serialVersionUID XMLWriter.serialVersionUID26,596
+  private static final String END_LINE XMLWriter.END_LINE28,668
+  private static final String CDATA_PREF XMLWriter.CDATA_PREF30,720
+  private static final String CDATA_END XMLWriter.CDATA_END32,779
+  private static final int[] EXCLUDING_SURROGATE_BLOCK XMLWriter.EXCLUDING_SURROGATE_BLOCK43,1265
+  private static final int EXCLUDING_MASK XMLWriter.EXCLUDING_MASK44,1343
+  private static final int[][] RESTRICTED_CHAR_BLOCKS XMLWriter.RESTRICTED_CHAR_BLOCKS48,1508
+  public enum XMLChars XMLWriter.XMLChars52,1680
+    LESSTHAN(XMLWriter.XMLChars.LESSTHAN53,1706
+    LESSTHAN("&lt;", '<'), GREATERTHAN(XMLWriter.XMLChars.GREATERTHAN53,1706
+    LESSTHAN("&lt;", '<'), GREATERTHAN("&gt;", '>'), AMP(XMLWriter.XMLChars.AMP53,1706
+    LESSTHAN("&lt;", '<'), GREATERTHAN("&gt;", '>'), AMP("&amp;", '&'), APOS(XMLWriter.XMLChars.APOS53,1706
+        "&apos;", '\''), QUOT(XMLWriter.XMLChars.QUOT54,1785
+    private XMLWriter.XMLChars.private56,1834
+    private String XMLWriter.XMLChars.String56,1834
+    private String xmlString;XMLWriter.XMLChars.xmlString56,1834
+    private XMLWriter.XMLChars.private57,1865
+    private char XMLWriter.XMLChars.char57,1865
+    private char xmlChar;XMLWriter.XMLChars.xmlChar57,1865
+    private XMLWriter.XMLChars.private59,1894
+    private XMLChars(XMLWriter.XMLChars.XMLChars59,1894
+    private XMLChars(String XMLWriter.XMLChars.String59,1894
+    private XMLChars(String xmlString,XMLWriter.XMLChars.xmlString59,1894
+    private XMLChars(String xmlString, char XMLWriter.XMLChars.char59,1894
+    private XMLChars(String xmlString, char xmlChar)XMLWriter.XMLChars.xmlChar59,1894
+    @OverrideXMLWriter.XMLChars.@Override64,2025
+    public XMLWriter.XMLChars.public65,2040
+    public String XMLWriter.XMLChars.String65,2040
+    public String toString(XMLWriter.XMLChars.toString65,2040
+    public XMLWriter.XMLChars.public69,2132
+    public String XMLWriter.XMLChars.String69,2132
+    public String getXmlString(XMLWriter.XMLChars.getXmlString69,2132
+    public XMLWriter.XMLChars.public73,2202
+    public char XMLWriter.XMLChars.char73,2202
+    public char getXmlChar(XMLWriter.XMLChars.getXmlChar73,2202
+    public XMLWriter.XMLChars.public77,2266
+    public static XMLWriter.XMLChars.static77,2266
+    public static XMLChars XMLWriter.XMLChars.XMLChars77,2266
+    public static XMLChars search(XMLWriter.XMLChars.search77,2266
+    public static XMLChars search(char XMLWriter.XMLChars.char77,2266
+    public static XMLChars search(char c)XMLWriter.XMLChars.c77,2266
+  public static String toXmlString(XMLWriter.toXmlString89,2519
+  public static void writeXMLBean(XMLWriter.writeXMLBean125,3461
+  public static void writeObjectToXmlFile(XMLWriter.writeObjectToXmlFile129,3569
+  public static String objectToXmlString(XMLWriter.objectToXmlString139,3858
+  public static void writeXmlBean(XMLWriter.writeXmlBean166,4930
+  private static String parseValue(XMLWriter.parseValue267,8445
+  public static void objectToXmlString(XMLWriter.objectToXmlString294,9350
+  public static void objectToXmlString2(XMLWriter.objectToXmlString2444,14798
+  private static Method[] extractMethods(XMLWriter.extractMethods746,25178
+
+src/com/ztools/xml/ZHandler.java,2459
+public class ZHandler 22,561
+  private static final long serialVersionUID ZHandler.serialVersionUID24,607
+  private boolean isDebug ZHandler.isDebug26,661
+  private int currLineNum ZHandler.currLineNum28,699
+  private StringBuilder characters ZHandler.characters30,733
+  private String rootName;ZHandler.rootName32,794
+  private List<Object> tempItemObject ZHandler.tempItemObject34,824
+  private String tempItemName ZHandler.tempItemName35,890
+  private Object currObject ZHandler.currObject36,929
+  private boolean isBaseType ZHandler.isBaseType37,966
+  private boolean isEndElement ZHandler.isEndElement39,1007
+  private Object bean;ZHandler.bean41,1050
+  private String defaultClassName ZHandler.defaultClassName43,1076
+  private String charset;ZHandler.charset45,1121
+  private boolean isRoot ZHandler.isRoot47,1150
+  private int depth;ZHandler.depth48,1184
+  private Map<ZHandler.Map50,1208
+  private Map<String, Object> objMap ZHandler.objMap50,1208
+  private Map<ZHandler.Map52,1281
+  private Map<Integer, Boolean> isMapEntry ZHandler.isMapEntry52,1281
+  private Map<ZHandler.Map53,1360
+  private Map<Integer, Object> currKey ZHandler.currKey53,1360
+  private Map<ZHandler.Map54,1434
+  private Map<Integer, Object> currValue ZHandler.currValue54,1434
+  private String tempHashcode ZHandler.tempHashcode55,1510
+  public String getCharset(ZHandler.getCharset57,1551
+  public void setCharset(ZHandler.setCharset61,1611
+  public ZHandler(ZHandler.ZHandler65,1691
+  private void debug(ZHandler.debug69,1737
+  public void startDocument(ZHandler.startDocument82,2276
+  private Field[] getFields(ZHandler.getFields89,2480
+  private Object encapsulateObject(ZHandler.encapsulateObject109,3021
+  public void startElement(ZHandler.startElement172,5153
+  public void characters(ZHandler.characters263,7926
+  private void processCharacters(ZHandler.processCharacters268,8104
+  private Object parseValue(ZHandler.parseValue297,9365
+  private String getMethodName(ZHandler.getMethodName340,11182
+  String[] space ZHandler.space347,11417
+  public void endElement(ZHandler.endElement349,11538
+  public Object getBean(ZHandler.getBean459,15665
+  public void setBean(ZHandler.setBean463,15719
+  public void endDocument(ZHandler.endDocument468,15806
+  public Object getXmlObject(ZHandler.getXmlObject479,16096
+  private static Method[] extractMethods(ZHandler.extractMethods483,16160
