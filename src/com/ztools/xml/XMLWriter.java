@@ -743,7 +743,7 @@ public class XMLWriter implements Serializable {
   // sbd.append(END_LINE);
   // }
 
-  private static Method[] extractMethods(Object obj) {
+  public static Method[] extractMethods(Object obj) {
     Class<?> c = obj.getClass();
     Method[] ms = null;// = obj.getClass().getDeclaredMethods();
     Method[] temp;
