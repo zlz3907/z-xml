@@ -1,4 +1,4 @@
-;;; prj.el --- Z-XML
+;;; prj.el --- Project Configuration
 
 ;;; Commentary:
 ;; JDEE Project
@@ -6,51 +6,68 @@
 ;; Version: 1.0
 
 ;;; Code:
-(jde-project-file-version "1.0")
-(defvar z-project-name "z-xml" "The project name.")
-(defvar z-base-dir (concat "~/projects/" z-project-name "/")
-  "The project base path.")
-(jde-set-variables
- '(jde-project-name 'z-project-name)
- ;; 运行时使用
- '(jde-global-classpath
-   (quote
-    ((concat 'z-base-dir "lib/*")
-     (concat 'z-base-dir "build/main")
-     (concat 'z-base-dir "build/test")
-     "~/apache/ant/lib/*"
-     "~/ivyrepository/junit-4.8.2.jar"
-     "~/ivyrepository/hamcrest-1.1.0.jar")
-    ))
- ;; 在编译时用到
- '(jde-compile-option-sourcepath
-   (quote ((concat 'z-base-dir "src")
-           (concat 'z-base-dir "test/unit")
-           (concat 'z-base-dir "test/verify")
-           (concat 'z-base-dir "test/integration"))))
- '(jde-compile-option-classpath
-   (quote ((concat 'z-base-dir "lib/*")
-           (concat 'z-base-dir "build/main")
-           (concat 'z-base-dir "build/test")
-           "~/ivyrepository/junit-4.8.2.jar"
-           "~/ivyrepository/hamcrest-1.1.0.jar")))
- ;; Junit
- '(jde-junit-working-directory 'z-base-dir)
- '(jde-run-working-directory 'z-base-dir)
- '(jde-sourcepath
-   (quote ((concat 'z-base-dir "src")
-           (concat 'z-base-dir "test/unit")
-           (concat 'z-base-dir "test/verify")
-           (concat 'z-base-dir "test/integration"))))
- ;;'(jde-run-application-class "~/projects/robot/bin")
- ;;'(jde-run-working-directory "e:/home/lizhi/workspace/2012/ztools")
- '(jde-compile-option-directory (concat "build/main/"))
- '(jde-compile-option-encoding "utf-8")
- '(jde-build-function (quote (jde-ant-build)))
- '(jde-ant-enable-find t)
- '(jde-ant-read-target t)
- '(jde-ant-home "~/apache/ant")
- '(jde-ant-invocation-method (quote ("Ant Server")))
+(defvar prj-ant-buildfile "build.xml"
+  "Specify a build file name.")
+(defvar prj-working-directory "."
+  "Specify working directory.")
+
+(defvar prj-ant-buildfile-abspath "."
+  "Abslute path of build file.")
+
+(defvar prj-customize-name ""
+  "Specify the project name, by default is current directory name.")
+(defvar prj-name ""
+  "Specify the project name.")
+(defvar prj-sourcepath nil
+  "Specify source path.")
+(defvar prj-classpath nil
+  "Specify classpath.")
+
+(setq prj-working-directory
+      (file-name-directory (jdee-find-project-file (file-truename "."))))
+
+(setq prj-ant-buildfile-abspath
+      (concat prj-working-directory
+              prj-ant-buildfile))
+
+(setq prj-name
+      (if (eq "" prj-customize-name)
+          (file-name-base (directory-file-name prj-working-directory))))
+
+
+(setq prj-sourcepath
+      (list (concat prj-working-directory "src")
+            (concat prj-working-directory "test/unit")
+            (concat prj-working-directory "test/verify")
+            (concat prj-working-directory "test/integration")))
+
+(setq prj-classpath
+      (list
+       (concat prj-working-directory "lib")
+       (concat prj-working-directory "build/main")
+       (concat prj-working-directory "build/test")))
+
+(jdee-project-file-version "1.0")
+(jdee-set-variables
+ '(jdee-project-name prj-name)
+ '(jdee-run-working-directory prj-working-directory)
+ '(jdee-ant-working-directory prj-working-directory)
+ '(jdee-ant-read-target t)
+ '(jdee-ant-enable-find t)
+ '(jdee-global-classpath prj-classpath)
+ '(jdee-compile-option-sourcepath prj-sourcepath)
+ '(jdee-compile-option-classpath prj-classpath)
+ '(jdee-built-class-path prj-classpath)
+ '(jdee-compile-option-directory
+   (concat prj-working-directory "build/main"))
+ '(jdee-xref-store-prefixes '("org.apache"
+                              "com.google"
+                              "commons"
+                              "junit"
+                              "log4j"
+                              "dom4j"
+                              "jdee" ))
+ ;;'(jdee-sourcepath (append prj-global-sourcepath prj-sourcepath))
  )
 
 ;;; prj.el ends here
