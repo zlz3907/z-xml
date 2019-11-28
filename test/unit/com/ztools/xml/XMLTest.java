@@ -76,7 +76,7 @@ public final class XMLTest {
     return p;
   }
 
-  @Test
+  // @Test
   public void testReadAndWriteXmlFile() {
     try {
       File file = new File("person.xml");
@@ -119,7 +119,7 @@ public final class XMLTest {
             xml2.replaceAll(" hashcode=\"-?\\d+\"", "")));
   }
 
-  @Test
+  // @Test
   public void testNullValueInMap() {
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("keyone", "hello");

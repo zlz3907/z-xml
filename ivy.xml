@@ -1,5 +1,5 @@
 <ivy-module version="2.0">
-  <info organisation="com.ztools" module="z-xml" revision="1.0">
+  <info organisation="com.zhycit" module="z-xml" revision="1.0-SNAPSHOT">
     <ivyauthor name="Zhong Lizhi" url="mailto:zlz.3907@gmail.com" />
     <description>
       Describes the current module. This tag is the only one which can contain
@@ -11,7 +11,7 @@
     </description>
   </info>
   <publications>
-    <artifact name="${ivy.module}" />
+    <artifact name="${ivy.module}" type="jar" ext="jar" />
   </publications>
 
   <dependencies defaultconf="*->default">

@@ -13,6 +13,17 @@
   <packaging>pom</packaging>
   <version>1.0</version>
   <build>
+
+    <!-- <directory>dist/${project.artifactId}</directory> -->
+    <!-- <finalName>${project.artifactId}-${project.version}</finalName> -->
+    <!-- <sourceDirectory>${src.dir}</sourceDirectory> -->
+    <!-- <outputDirectory>build/main</outputDirectory> -->
+    <!-- <resources> -->
+    <!--   <resource> -->
+    <!--     <directory>src/conf</directory> -->
+    <!--   </resource> -->
+    <!-- </resources> -->
+
     <plugins>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -33,14 +44,16 @@
         </executions>
       </plugin>
     </plugins>
+
+
   </build>
   <dependencies>
-    <dependency>
-      <groupId>com.acme</groupId>
-      <artifactId>acme-logging</artifactId>
-      <version>1.0</version>
-      <optional>true</optional>
-    </dependency>
+    <!-- <dependency> -->
+    <!--   <groupId>com.acme</groupId> -->
+    <!--   <artifactId>acme-logging</artifactId> -->
+    <!--   <version>1.0</version> -->
+    <!--   <optional>true</optional> -->
+    <!-- </dependency> -->
     <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-all</artifactId>
@@ -54,4 +67,17 @@
       <optional>true</optional>
     </dependency>
   </dependencies>
+
+  <distributionManagement>
+    <repository>
+      <id>nexus-releases</id>
+      <name>Nexus Release Repository</name>
+      <url>http://47.97.216.100:8081/repository/maven-releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>nexus-snapshots</id>
+      <name>Nexus Snapshot Repository</name>
+      <url>http://47.97.216.100:8081/repository/maven-snapshots/</url>
+    </snapshotRepository><!-- 添加测试-->
+  </distributionManagement>
 </project>
